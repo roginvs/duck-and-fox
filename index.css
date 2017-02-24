@@ -1,0 +1,15 @@
+#playground {
+    background-color: green;
+    position: relative;
+}
+#duck {
+    background-image: url('duck.png');
+    position: absolute;
+    background-size: 100% 100%;
+}
+#lake {
+    position: absolute;
+    background-color: blue;
+    border: 1px solid black;
+    box-sizing: border-box;
+}
