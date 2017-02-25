@@ -1,7 +1,6 @@
 'use strict';
 /*
 TODO:
-- lastFoxAngleDelta rename to lastFoxAngleDeltaSign and set it to +1 or -1
 - Winning animation
 - Make fox transparent on image
 - Center dot? 3/4r circle?
@@ -14,23 +13,23 @@ const iconsSize = 10;
 
 const tickIntervalMicroseconds = 50;
 
-
 const duckSpeed = playgroundSize / (1000 / tickIntervalMicroseconds) / 16;
 
 const lakeRadius = playgroundSize / 3;
-const foxAngleSpeed = duckSpeed * 2 / lakeRadius;
+const foxAngleSpeed = duckSpeed * 4 / lakeRadius;
 const lakeCenterX = playgroundSize / 2;
 const lakeCenterY = playgroundSize / 2;
 
-let mouseX = lakeCenterX;
-let mouseY = lakeCenterY;
-
-let duckX = lakeCenterX;
-let duckY = lakeCenterY;
-
-let foxAngle = 0;
 
 window.onload = () => {
+    let mouseX = lakeCenterX;
+    let mouseY = lakeCenterY;
+
+    let duckX = lakeCenterX;
+    let duckY = lakeCenterY;
+
+    let foxAngle = 0;
+
     const playgroundOrNull = document.getElementById('playground');
     if (!playgroundOrNull) {
         return
@@ -67,7 +66,11 @@ window.onload = () => {
     lake.style.top = (playgroundSize / 2 - lakeRadius) + 'px';
     lake.style.borderRadius = lakeRadius + 'px';
 
-
+    const youwonOrNull = document.getElementById('youwon');
+    if (! youwonOrNull) {
+        return
+    }
+    const youwon = youwonOrNull;
 
     playground.onmousemove = e => {
         mouseX = e.pageX - playground.offsetLeft;
@@ -99,7 +102,8 @@ window.onload = () => {
         };
     }
     function startAnimation() {
-        playground.onclick = e => {};
+        youwon.style.display = "none";
+        playground.onclick = e => { };
         animationTimerId = setInterval(() => {
             const duckDeltaXBeforeSpeedLimit = mouseX - duckX;
             const duckDeltaYBeforeSpeedLimit = mouseY - duckY;
@@ -161,13 +165,13 @@ window.onload = () => {
 
             if (Math.sqrt((duckX - lakeCenterX) ** 2 + (duckY - lakeCenterY) ** 2) - lakeRadius > 0) {
                 if (Math.abs((foxAngle - duckAngle) * lakeRadius) > iconsSize / 2) {
-                    alert('Done!');
+                    youwon.style.display = "";
                     stopAnimation();
                 }
                 duckX = lakeCenterX;
                 duckY = lakeCenterY;
             }
         }, tickIntervalMicroseconds);
-    } 
-    startAnimation();   
+    }
+    startAnimation();
 }

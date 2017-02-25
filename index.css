@@ -20,3 +20,13 @@
     border: 1px solid black;
     box-sizing: border-box;
 }
+#youwon {
+    position: absolute;
+    left: 30%;
+    right: 30%;
+    top: 35%;
+    bottom: 35%;
+    color: glack;
+    font-size: 3em;
+    text-align: center;    
+}

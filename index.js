@@ -1,7 +1,6 @@
 'use strict';
 /*
 TODO:
-- lastFoxAngleDelta rename to lastFoxAngleDeltaSign and set it to +1 or -1
 - Winning animation
 - Make fox transparent on image
 - Center dot? 3/4r circle?
@@ -13,15 +12,15 @@ var iconsSize = 10;
 var tickIntervalMicroseconds = 50;
 var duckSpeed = playgroundSize / (1000 / tickIntervalMicroseconds) / 16;
 var lakeRadius = playgroundSize / 3;
-var foxAngleSpeed = duckSpeed * 2 / lakeRadius;
+var foxAngleSpeed = duckSpeed * 4 / lakeRadius;
 var lakeCenterX = playgroundSize / 2;
 var lakeCenterY = playgroundSize / 2;
-var mouseX = lakeCenterX;
-var mouseY = lakeCenterY;
-var duckX = lakeCenterX;
-var duckY = lakeCenterY;
-var foxAngle = 0;
 window.onload = function () {
+    var mouseX = lakeCenterX;
+    var mouseY = lakeCenterY;
+    var duckX = lakeCenterX;
+    var duckY = lakeCenterY;
+    var foxAngle = 0;
     var playgroundOrNull = document.getElementById('playground');
     if (!playgroundOrNull) {
         return;
@@ -54,6 +53,11 @@ window.onload = function () {
     lake.style.left = (playgroundSize / 2 - lakeRadius) + 'px';
     lake.style.top = (playgroundSize / 2 - lakeRadius) + 'px';
     lake.style.borderRadius = lakeRadius + 'px';
+    var youwonOrNull = document.getElementById('youwon');
+    if (!youwonOrNull) {
+        return;
+    }
+    var youwon = youwonOrNull;
     playground.onmousemove = function (e) {
         mouseX = e.pageX - playground.offsetLeft;
         if (mouseX < 0) {
@@ -82,6 +86,7 @@ window.onload = function () {
         };
     }
     function startAnimation() {
+        youwon.style.display = "none";
         playground.onclick = function (e) { };
         animationTimerId = setInterval(function () {
             var duckDeltaXBeforeSpeedLimit = mouseX - duckX;
@@ -137,7 +142,7 @@ window.onload = function () {
             fox.style.top = (foxY - iconsSize / 2) + 'px';
             if (Math.sqrt(Math.pow((duckX - lakeCenterX), 2) + Math.pow((duckY - lakeCenterY), 2)) - lakeRadius > 0) {
                 if (Math.abs((foxAngle - duckAngle) * lakeRadius) > iconsSize / 2) {
-                    alert('Done!');
+                    youwon.style.display = "";
                     stopAnimation();
                 }
                 duckX = lakeCenterX;
