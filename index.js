@@ -5,22 +5,29 @@ const iconsSize = 10;
 
 const tickIntervalMicroseconds = 250;
 
-const foxSpeed = playgroundSize / (1000 / tickIntervalMicroseconds) / 4;
-const duckSpeed = foxSpeed / 4;
+
+const duckSpeed = playgroundSize / (1000 / tickIntervalMicroseconds) / 16;
 
 const lakeRadius = playgroundSize / 3;
+const foxAngleSpeed = duckSpeed * 4 / lakeRadius;
 const lakeCenterX = playgroundSize / 2;
 const lakeCenterY = playgroundSize / 2;
 
+let lastFoxAngleDelta = 0;
+
 window.onload = () => {
-    let playground = document.getElementById('playground');
+    const playground = document.getElementById('playground');
     playground.style.width = playgroundSize + 'px';
     playground.style.height = playgroundSize + 'px';
-    let duck = document.getElementById('duck');
+    const duck = document.getElementById('duck');
     duck.style.width = iconsSize + 'px';
     duck.style.height = iconsSize + 'px';
+    const fox = document.getElementById('fox');
+    fox.style.width = iconsSize + 'px';
+    fox.style.height = iconsSize + 'px';
 
-    let lake = document.getElementById('lake');
+
+    const lake = document.getElementById('lake');
     lake.style.width = lakeRadius * 2 + 'px';
     lake.style.height = lakeRadius * 2 + 'px';
     lake.style.left = (playgroundSize / 2 - lakeRadius) + 'px';
@@ -33,6 +40,8 @@ window.onload = () => {
 
     let duckX = lakeCenterX;
     let duckY = lakeCenterY;
+
+    let foxAngle = 0;
 
     playground.onmousemove = e => {
         mouseX = e.pageX - playground.offsetLeft;
@@ -64,7 +73,7 @@ window.onload = () => {
         }
 
         //duckDeltaX = -2;
-       // duckDeltaY = 4.5;
+        // duckDeltaY = 4.5;
         duckX = duckX + duckDeltaX;
         duckY = duckY + duckDeltaY;
 
@@ -73,8 +82,8 @@ window.onload = () => {
             if (duckDeltaX != 0) {
                 rotateRad = Math.atan(duckDeltaY / duckDeltaX);
             } else {
-                rotateRad = duckDeltaY > 0 ? Math.Pi / 2 : -Math.Pi / 2;
-            }            
+                rotateRad = duckDeltaY > 0 ? Math.PI / 2 : -Math.PI / 2;
+            }
             duck.style.transform = `rotate(${rotateRad}rad) scaleX(${duckDeltaX < 0 ? -1 : 1})`;
         } else {
             duck.style.transform = '';
@@ -82,6 +91,41 @@ window.onload = () => {
 
         duck.style.left = (duckX - iconsSize / 2) + 'px';
         duck.style.top = (duckY - iconsSize / 2) + 'px';
+
+        let duckAngle = 0;
+        if (duckX != lakeCenterX && duckY != lakeCenterY) {
+            let duckRadius = Math.sqrt((duckX - lakeCenterX) ** 2 + (duckY - lakeCenterY) ** 2);
+            duckAngle = Math.acos((duckX - lakeCenterX) / duckRadius);
+            if (duckY - lakeCenterY < 0) {
+                duckAngle = 2 * Math.PI - duckAngle;
+            }
+        }
+
+        let foxAngleDelta = duckAngle - foxAngle;
+        if (foxAngleDelta > Math.PI || foxAngleDelta < - Math.PI) {
+            foxAngleDelta = - foxAngleDelta;
+        }
+        if (Math.abs(foxAngleDelta) > foxAngleSpeed) {
+            foxAngleDelta = foxAngleDelta > 0 ? foxAngleSpeed : -foxAngleSpeed;
+        }
+
+        foxAngle = foxAngle + foxAngleDelta;
+
+        if (foxAngle < 0) {
+            foxAngle = foxAngle + 2 * Math.PI;
+        }
+        if (foxAngle > 2 * Math.PI) {
+            foxAngle = foxAngle - 2 * Math.PI;
+        }
+        let foxScale = 3;
+        fox.style.transform = `rotate(${foxAngle + Math.PI / 2}rad) ` +
+            `scaleX(${(foxAngleDelta != 0 ? foxAngleDelta >= 0 : lastFoxAngleDelta >= 0) ? foxScale : -foxScale}) ` +
+            `scaleY(${foxAngle >= Math.PI ? foxScale : -foxScale})`;
+        lastFoxAngleDelta = foxAngleDelta != 0 ? foxAngleDelta : lastFoxAngleDelta;
+        let foxX = Math.cos(foxAngle) * (lakeRadius + iconsSize / 2) + lakeCenterX;
+        let foxY = Math.sin(foxAngle) * (lakeRadius + iconsSize / 2) + lakeCenterY;
+        fox.style.left = (foxX - iconsSize / 2) + 'px';
+        fox.style.top = (foxY - iconsSize / 2) + 'px';
 
         if (Math.sqrt((duckX - lakeCenterX) ** 2 + (duckY - lakeCenterY) ** 2) - lakeRadius > 0) {
             duckX = lakeCenterX;

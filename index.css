@@ -7,6 +7,13 @@
     position: absolute;
     background-size: 100% 100%;
 }
+#fox {
+    background-image: url('fox.png');
+    mix-blend-mode: multiply;
+    position: absolute;
+    background-size: 100% 100%;
+}
+
 #lake {
     position: absolute;
     background-color: blue;
