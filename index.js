@@ -1,4 +1,13 @@
 'use strict';
+/*
+TODO:
+- lastFoxAngleDelta rename to lastFoxAngleDeltaSign and set it to +1 or -1
+- Winning animation
+- Make fox transparent on image
+- Center dot? 3/4r circle?
+- Legeng with instructions
+- Grass and water
+*/
 
 const playgroundSize = 500;
 const iconsSize = 10;
