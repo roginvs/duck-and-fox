@@ -3,7 +3,7 @@
 const playgroundSize = 500;
 const iconsSize = 10;
 
-const tickIntervalMicroseconds = 250;
+const tickIntervalMicroseconds = 50;
 
 
 const duckSpeed = playgroundSize / (1000 / tickIntervalMicroseconds) / 16;
@@ -128,9 +128,11 @@ window.onload = () => {
         fox.style.top = (foxY - iconsSize / 2) + 'px';
 
         if (Math.sqrt((duckX - lakeCenterX) ** 2 + (duckY - lakeCenterY) ** 2) - lakeRadius > 0) {
+            if (Math.abs((foxAngle - duckAngle)*lakeRadius > iconsSize/2 ) ) {
+                alert('Done!');
+            }
             duckX = lakeCenterX;
-            duckY = lakeCenterY;
-            console.info('Well done!');
+            duckY = lakeCenterY;            
         }
     }, tickIntervalMicroseconds);
 
