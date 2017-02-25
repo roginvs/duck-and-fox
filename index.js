@@ -105,7 +105,7 @@ window.onload = function () {
                 duck.style.transform = "rotate(" + rotateRad + "rad) scaleX(" + (duckDeltaX < 0 ? -1 : 1) + ")";
             }
             else {
-                duck.style.transform = '';
+                //   duck.style.transform = '';
             }
             duck.style.left = (duckX - iconsSize / 2) + 'px';
             duck.style.top = (duckY - iconsSize / 2) + 'px';

@@ -119,10 +119,10 @@ window.onload = () => {
             if (duckDeltaX != 0 || duckDeltaY != 0) {
                 const rotateRad = duckDeltaX != 0 ?
                     Math.atan(duckDeltaY / duckDeltaX) :
-                    (duckDeltaY > 0 ? Math.PI / 2 : -Math.PI / 2);
+                    (duckDeltaY > 0 ? Math.PI / 2 : -Math.PI / 2);                
                 duck.style.transform = `rotate(${rotateRad}rad) scaleX(${duckDeltaX < 0 ? -1 : 1})`;
             } else {
-                duck.style.transform = '';
+             //   duck.style.transform = '';
             }
 
             duck.style.left = (duckX - iconsSize / 2) + 'px';
