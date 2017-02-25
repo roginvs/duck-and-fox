@@ -13,10 +13,14 @@ var iconsSize = 10;
 var tickIntervalMicroseconds = 50;
 var duckSpeed = playgroundSize / (1000 / tickIntervalMicroseconds) / 16;
 var lakeRadius = playgroundSize / 3;
-var foxAngleSpeed = duckSpeed * 4 / lakeRadius;
+var foxAngleSpeed = duckSpeed * 2 / lakeRadius;
 var lakeCenterX = playgroundSize / 2;
 var lakeCenterY = playgroundSize / 2;
-var lastFoxAngleDelta = 0;
+var mouseX = lakeCenterX;
+var mouseY = lakeCenterY;
+var duckX = lakeCenterX;
+var duckY = lakeCenterY;
+var foxAngle = 0;
 window.onload = function () {
     var playgroundOrNull = document.getElementById('playground');
     if (!playgroundOrNull) {
@@ -50,11 +54,6 @@ window.onload = function () {
     lake.style.left = (playgroundSize / 2 - lakeRadius) + 'px';
     lake.style.top = (playgroundSize / 2 - lakeRadius) + 'px';
     lake.style.borderRadius = lakeRadius + 'px';
-    var mouseX = lakeCenterX;
-    var mouseY = lakeCenterY;
-    var duckX = lakeCenterX;
-    var duckY = lakeCenterY;
-    var foxAngle = 0;
     playground.onmousemove = function (e) {
         mouseX = e.pageX - playground.offsetLeft;
         if (mouseX < 0) {
@@ -72,65 +71,80 @@ window.onload = function () {
             mouseY = playgroundSize - 1;
         }
     };
-    setInterval(function () {
-        var duckDeltaXBeforeSpeedLimit = mouseX - duckX;
-        var duckDeltaYBeforeSpeedLimit = mouseY - duckY;
-        var speedRatio = Math.sqrt(Math.pow(duckDeltaXBeforeSpeedLimit, 2) + Math.pow(duckDeltaYBeforeSpeedLimit, 2)) / duckSpeed;
-        var duckDeltaX = speedRatio > 1 ? duckDeltaXBeforeSpeedLimit / speedRatio : duckDeltaXBeforeSpeedLimit;
-        var duckDeltaY = speedRatio > 1 ? duckDeltaYBeforeSpeedLimit / speedRatio : duckDeltaYBeforeSpeedLimit;
-        //duckDeltaX = -2;
-        // duckDeltaY = 4.5;
-        duckX = duckX + duckDeltaX;
-        duckY = duckY + duckDeltaY;
-        if (duckDeltaX != 0 || duckDeltaY != 0) {
-            var rotateRad = duckDeltaX != 0 ?
-                Math.atan(duckDeltaY / duckDeltaX) :
-                (duckDeltaY > 0 ? Math.PI / 2 : -Math.PI / 2);
-            duck.style.transform = "rotate(" + rotateRad + "rad) scaleX(" + (duckDeltaX < 0 ? -1 : 1) + ")";
+    var lastFoxAngleDeltaSign = 0;
+    var animationTimerId;
+    function stopAnimation() {
+        if (animationTimerId) {
+            clearInterval(animationTimerId);
         }
-        else {
-            duck.style.transform = '';
-        }
-        duck.style.left = (duckX - iconsSize / 2) + 'px';
-        duck.style.top = (duckY - iconsSize / 2) + 'px';
-        var duckAngle = 0;
-        if (duckX != lakeCenterX && duckY != lakeCenterY) {
-            var duckRadius = Math.sqrt(Math.pow((duckX - lakeCenterX), 2) + Math.pow((duckY - lakeCenterY), 2));
-            duckAngle = Math.acos((duckX - lakeCenterX) / duckRadius);
-            if (duckY - lakeCenterY < 0) {
-                duckAngle = 2 * Math.PI - duckAngle;
+        playground.onclick = function (e) {
+            startAnimation();
+        };
+    }
+    function startAnimation() {
+        playground.onclick = function (e) { };
+        animationTimerId = setInterval(function () {
+            var duckDeltaXBeforeSpeedLimit = mouseX - duckX;
+            var duckDeltaYBeforeSpeedLimit = mouseY - duckY;
+            var speedRatio = Math.sqrt(Math.pow(duckDeltaXBeforeSpeedLimit, 2) + Math.pow(duckDeltaYBeforeSpeedLimit, 2)) / duckSpeed;
+            var duckDeltaX = speedRatio > 1 ? duckDeltaXBeforeSpeedLimit / speedRatio : duckDeltaXBeforeSpeedLimit;
+            var duckDeltaY = speedRatio > 1 ? duckDeltaYBeforeSpeedLimit / speedRatio : duckDeltaYBeforeSpeedLimit;
+            //duckDeltaX = -2;
+            // duckDeltaY = 4.5;
+            duckX = duckX + duckDeltaX;
+            duckY = duckY + duckDeltaY;
+            if (duckDeltaX != 0 || duckDeltaY != 0) {
+                var rotateRad = duckDeltaX != 0 ?
+                    Math.atan(duckDeltaY / duckDeltaX) :
+                    (duckDeltaY > 0 ? Math.PI / 2 : -Math.PI / 2);
+                duck.style.transform = "rotate(" + rotateRad + "rad) scaleX(" + (duckDeltaX < 0 ? -1 : 1) + ")";
             }
-        }
-        var foxAngleDelta = duckAngle - foxAngle;
-        if (foxAngleDelta > Math.PI || foxAngleDelta < -Math.PI) {
-            foxAngleDelta = -foxAngleDelta;
-        }
-        if (Math.abs(foxAngleDelta) > foxAngleSpeed) {
-            foxAngleDelta = foxAngleDelta > 0 ? foxAngleSpeed : -foxAngleSpeed;
-        }
-        foxAngle = foxAngle + foxAngleDelta;
-        if (foxAngle < 0) {
-            foxAngle = foxAngle + 2 * Math.PI;
-        }
-        if (foxAngle > 2 * Math.PI) {
-            foxAngle = foxAngle - 2 * Math.PI;
-        }
-        var foxScale = 3;
-        fox.style.transform = "rotate(" + (foxAngle + Math.PI / 2) + "rad) " +
-            ("scaleX(" + ((foxAngleDelta != 0 ? foxAngleDelta >= 0 : lastFoxAngleDelta >= 0) ? foxScale : -foxScale) + ") ") +
-            ("scaleY(" + (foxAngle >= Math.PI ? foxScale : -foxScale) + ")");
-        lastFoxAngleDelta = foxAngleDelta != 0 ? foxAngleDelta : lastFoxAngleDelta;
-        var foxX = Math.cos(foxAngle) * (lakeRadius + iconsSize / 2) + lakeCenterX;
-        var foxY = Math.sin(foxAngle) * (lakeRadius + iconsSize / 2) + lakeCenterY;
-        fox.style.left = (foxX - iconsSize / 2) + 'px';
-        fox.style.top = (foxY - iconsSize / 2) + 'px';
-        if (Math.sqrt(Math.pow((duckX - lakeCenterX), 2) + Math.pow((duckY - lakeCenterY), 2)) - lakeRadius > 0) {
-            if (Math.abs((foxAngle - duckAngle) * lakeRadius) > iconsSize / 2) {
-                alert('Done!');
+            else {
+                duck.style.transform = '';
             }
-            duckX = lakeCenterX;
-            duckY = lakeCenterY;
-        }
-    }, tickIntervalMicroseconds);
+            duck.style.left = (duckX - iconsSize / 2) + 'px';
+            duck.style.top = (duckY - iconsSize / 2) + 'px';
+            var duckAngle = 0;
+            if (duckX != lakeCenterX && duckY != lakeCenterY) {
+                var duckRadius = Math.sqrt(Math.pow((duckX - lakeCenterX), 2) + Math.pow((duckY - lakeCenterY), 2));
+                duckAngle = Math.acos((duckX - lakeCenterX) / duckRadius);
+                if (duckY - lakeCenterY < 0) {
+                    duckAngle = 2 * Math.PI - duckAngle;
+                }
+            }
+            var foxAngleDelta = duckAngle - foxAngle;
+            if (foxAngleDelta > Math.PI || foxAngleDelta < -Math.PI) {
+                foxAngleDelta = -foxAngleDelta;
+            }
+            if (Math.abs(foxAngleDelta) > foxAngleSpeed) {
+                foxAngleDelta = foxAngleDelta > 0 ? foxAngleSpeed : -foxAngleSpeed;
+            }
+            foxAngle = foxAngle + foxAngleDelta;
+            if (foxAngle < 0) {
+                foxAngle = foxAngle + 2 * Math.PI;
+            }
+            if (foxAngle > 2 * Math.PI) {
+                foxAngle = foxAngle - 2 * Math.PI;
+            }
+            var foxScale = 3;
+            fox.style.transform = "rotate(" + (foxAngle + Math.PI / 2) + "rad) " +
+                ("scaleX(" + ((foxAngleDelta != 0 ? foxAngleDelta >= 0 : lastFoxAngleDeltaSign >= 0) ? foxScale : -foxScale) + ") ") +
+                ("scaleY(" + (foxAngle >= Math.PI ? foxScale : -foxScale) + ")");
+            lastFoxAngleDeltaSign = foxAngleDelta != 0 ? foxAngleDelta : lastFoxAngleDeltaSign;
+            var foxX = Math.cos(foxAngle) * (lakeRadius + iconsSize / 2) + lakeCenterX;
+            var foxY = Math.sin(foxAngle) * (lakeRadius + iconsSize / 2) + lakeCenterY;
+            fox.style.left = (foxX - iconsSize / 2) + 'px';
+            fox.style.top = (foxY - iconsSize / 2) + 'px';
+            if (Math.sqrt(Math.pow((duckX - lakeCenterX), 2) + Math.pow((duckY - lakeCenterY), 2)) - lakeRadius > 0) {
+                if (Math.abs((foxAngle - duckAngle) * lakeRadius) > iconsSize / 2) {
+                    alert('Done!');
+                    stopAnimation();
+                }
+                duckX = lakeCenterX;
+                duckY = lakeCenterY;
+            }
+        }, tickIntervalMicroseconds);
+    }
+    startAnimation();
 };
 //# sourceMappingURL=index.js.map
