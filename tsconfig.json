@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "target": "es5",
+        "module": "commonjs",
+        "alwaysStrict": true,
+        "experimentalDecorators": true,
+        "noImplicitAny": true,
+        "sourceMap": true,
+        "strictNullChecks": true
+    },
+    "compileOnSave": true,
+    "include": [
+        "./*.ts",
+        "typings/**/*.ts"
+    ]
+}
