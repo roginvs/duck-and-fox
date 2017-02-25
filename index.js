@@ -8,7 +8,7 @@ TODO:
 - Grass and water
 */
 var playgroundSize = 500;
-var iconsSize = 10;
+var iconsSize = 20;
 var tickIntervalMicroseconds = 50;
 var duckSpeed = playgroundSize / (1000 / tickIntervalMicroseconds) / 16;
 var lakeRadius = playgroundSize / 3;

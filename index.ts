@@ -9,7 +9,7 @@ TODO:
 */
 
 const playgroundSize = 500;
-const iconsSize = 10;
+const iconsSize = 20;
 
 const tickIntervalMicroseconds = 50;
 
