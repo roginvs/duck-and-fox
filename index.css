@@ -9,7 +9,7 @@
 }
 #fox {
     background-image: url('fox.png');
-    mix-blend-mode: multiply;
+    /* mix-blend-mode: multiply; */
     position: absolute;
     background-size: 100% 100%;
 }
