@@ -21,6 +21,15 @@ window.onload = function () {
     var duckX = lakeCenterX;
     var duckY = lakeCenterY;
     var foxAngle = 0;
+    for (var _i = 0, _a = ['help-top', 'help-bottom']; _i < _a.length; _i++) {
+        var helpId = _a[_i];
+        var help = document.getElementById(helpId);
+        if (!help) {
+            return;
+        }
+        ;
+        help.style.width = playgroundSize + 'px';
+    }
     var playgroundOrNull = document.getElementById('playground');
     if (!playgroundOrNull) {
         return;

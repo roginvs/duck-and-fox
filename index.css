@@ -1,3 +1,17 @@
+#help-top {
+    position: absolute;
+    top: 0px;
+    padding-left: 15%;
+    padding-right: 15%;
+    box-sizing: border-box;
+}
+#help-bottom {
+    position: absolute;
+    bottom: 0px;
+    padding-left: 15%;
+    padding-right: 15%;
+    box-sizing: border-box;    
+}
 #playground {
     background-color: green;
     position: relative;

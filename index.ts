@@ -30,6 +30,15 @@ window.onload = () => {
 
     let foxAngle = 0;
 
+    for (let helpId of ['help-top','help-bottom']) {
+        const help = document.getElementById(helpId);
+        if (!help) {
+            return
+        };        
+        help.style.width = playgroundSize + 'px';            
+    }
+    
+    
     const playgroundOrNull = document.getElementById('playground');
     if (!playgroundOrNull) {
         return
