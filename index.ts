@@ -137,6 +137,10 @@ window.onload = () => {
             duck.style.left = (duckX - iconsSize / 2) + 'px';
             duck.style.top = (duckY - iconsSize / 2) + 'px';
 
+            if (duckDeltaX == 0 && duckDeltaY == 0) {
+                return;
+            };
+
             let duckAngle = 0;
             if (duckX != lakeCenterX && duckY != lakeCenterY) {
                 const duckRadius = Math.sqrt((duckX - lakeCenterX) ** 2 + (duckY - lakeCenterY) ** 2);

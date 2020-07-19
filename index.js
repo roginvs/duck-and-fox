@@ -118,6 +118,10 @@ window.onload = function () {
             }
             duck.style.left = (duckX - iconsSize / 2) + 'px';
             duck.style.top = (duckY - iconsSize / 2) + 'px';
+            if (duckDeltaX == 0 && duckDeltaY == 0) {
+                return;
+            }
+            ;
             var duckAngle = 0;
             if (duckX != lakeCenterX && duckY != lakeCenterY) {
                 var duckRadius = Math.sqrt(Math.pow((duckX - lakeCenterX), 2) + Math.pow((duckY - lakeCenterY), 2));
