@@ -54,12 +54,11 @@
     border: 1px solid black;
 }
 #youwon {
-    position: absolute;
-    left: 30%;
-    right: 30%;
-    top: 35%;
-    bottom: 35%;
-    color: glack;
-    font-size: 3em;
-    text-align: center;    
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: green;
+  font-size: 14em;
+  text-align: center;
 }
